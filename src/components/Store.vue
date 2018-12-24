@@ -4,6 +4,9 @@
             <div class="col bg-dark text-white">
                 <a class="navbar-brand">SPORTS STORE</a>
             </div>
+            <div class="col bg-dark text-white">
+                <CartSummary />
+            </div>
         </div>
         <div class="row">
             <div class="col-3 bg-info p-2">
@@ -19,11 +22,13 @@
 <script>
     import ProductList from './ProductList.vue'
     import ProductCategory from './ProductCategory.vue'
+    import CartSummary from './CartSummary.vue'
 
     export default {
         components: {
             ProductList,
-            ProductCategory
+            ProductCategory,
+            CartSummary
         }
     }
 </script>

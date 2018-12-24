@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import Axios from "axios";
+import CartModule from "./cart";
 
 Vue.use(Vuex);
 
@@ -10,6 +11,7 @@ const categoriesUrl = `${baseUrl}/categories`;
 
 export default new Vuex.Store({
     strict: true,
+    modules: {cart: CartModule},
     state: {
         products: [],
         categoriesData: [],
@@ -48,7 +50,6 @@ export default new Vuex.Store({
     },
     actions: {
         async getData(context) {
-            debugger
             let pdata = (await Axios.get(productsUrl)).data;
             let cdata = (await Axios.get(categoriesUrl)).data;
             context.commit("setData", { pdata, cdata });
