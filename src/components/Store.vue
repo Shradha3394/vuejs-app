@@ -11,6 +11,8 @@
         <div class="row">
             <div class="col-3 bg-info p-2">
                 <ProductCategory />
+                <Search />
+
             </div>
             <div class="col-9 p-2 ">
                 <product-list />
@@ -23,12 +25,14 @@
     import ProductList from './ProductList.vue'
     import ProductCategory from './ProductCategory.vue'
     import CartSummary from './CartSummary.vue'
+    import Search from './Search.vue'
 
     export default {
         components: {
             ProductList,
             ProductCategory,
-            CartSummary
+            CartSummary,
+            Search
         }
     }
 </script>

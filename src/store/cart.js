@@ -40,6 +40,9 @@ export default {
                 context.commit("setCartData", JSON.parse(data));
             }
         },
+        clearCartData(context) {
+            context.commit("setCartData", []);
+        },
         initializeCart(context, store) {
             context.dispatch("loadCartData");
             store.watch(state => state.cart.lines, () => context.dispatch("storeCartData"), { deep: true });

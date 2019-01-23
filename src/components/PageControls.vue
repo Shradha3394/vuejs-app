@@ -8,6 +8,8 @@
             </select>
         </div>
         <div v-if="pageCount > 1" class="text-right col">
+            <button class="btn btn-secondary mx -1" v-bind:disabled="currentPage == 1" v-on:click="setCurrentPage(currentPage-1)">Previous</button>
+            <button class="btn btn-secondary mx -1" v-show="currentPage > 4" v-on:click="setCurrentPage(1)">...</button>
             <div class="btn-group mx-2">
                 <button v-for="i in pageNumbers" v-bind:key="i"
                         class="btn btn-secpmdary"
@@ -15,6 +17,8 @@
                     {{ i }}
                 </button>
             </div>
+            <button class="btn btn-secondary mx -1" v-show="currentPage <= pageCount - 4" v-on:click="setCurrentPage(pageCount)">...</button>
+            <button class="btn btn-secondary mx -1" v-bind:disabled="currentPage == pageCount" v-on:click="setCurrentPage(currentPage+1)">Next</button>
         </div>
     </div>
 </template>
@@ -28,13 +32,23 @@
             ...mapState(["currentPage"]),
             ...mapGetters(["pageCount"]),
             pageNumbers() {
-                return Array.from({ length: this.pageCount }, (v, k) => k + 1);
+                if (this.pageCount < 4) {
+                    return Array.from({ length: this.pageCount }, (v, k) => k + 1);
+                } else if (this.currentPage <= 4) {
+                    return [1, 2, 3, 4, 5];
+                } else if (this.currentPage > this.pageCount - 4) {
+                    return [...Array(5).keys()].reverse()
+                        .map(v => this.pageCount - v);
+                } else {
+                    return [this.currentPage - 1, this.currentPage,
+                    this.currentPage + 1];  
+                }
             }
         },
         methods: {
             ...mapMutations(["setCurrentPage", "setPageSize"]),
             changePageSize($event) {
-                this.setPageSize($event.target.value);
+                this.setPageSize(Number($event.target.value));
             }
         }
     }

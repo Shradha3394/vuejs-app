@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import Axios from "axios";
 import CartModule from "./cart";
+import OrdersModule from "./orders";
 
 Vue.use(Vuex);
 
@@ -11,14 +12,15 @@ const categoriesUrl = `${baseUrl}/categories`;
 
 export default new Vuex.Store({
     strict: true,
-    modules: {cart: CartModule},
+    modules: { cart: CartModule, orders: OrdersModule },
     state: {
         products: [],
         categoriesData: [],
         productsTotal: 0,
         currentPage: 1,
         pageSize: 4,
-        currentCategory: "All"
+        currentCategory: "All",
+        searchTerm: ""
     },
     getters: {
         productsFilteredByCategory: state => {
@@ -46,13 +48,32 @@ export default new Vuex.Store({
             state.products = data.pdata;
             state.productsTotal = data.pdata.length;
             state.categoriesData = data.cdata.sort();
+        },
+        setSearchTerm(state, term) {
+            state.searchTerm = term;
+            state.currentPage = 1;
         }
     },
     actions: {
         async getData(context) {
-            let pdata = (await Axios.get(productsUrl)).data;
+            let url = productsUrl;
+            var separator = "?";
+            if (context.state.currentCategory !== "All") {
+                url += `${separator}category=${context.state.currentCategory}`;
+                separator = "&";
+            }
+
+            if (context.state.searchTerm !== "") {
+                url += `${separator}q=${context.state.searchTerm}`;
+            }
+
+            let response = await Axios.get(url);
             let cdata = (await Axios.get(categoriesUrl)).data;
-            context.commit("setData", { pdata, cdata });
+            context.commit("setData", { pdata: response.data, cdata });
+        },
+        search(context, term) {
+            context.commit("setSearchTerm", term);
+            context.dispatch("getData");
         }
     }
 });
